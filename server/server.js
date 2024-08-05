@@ -1,7 +1,7 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const path = require('path');
-const { authMiddleware, authMiddlewareGraphQL } = require('./utils/auth');
+const { authMiddleware } = require('./utils/auth');
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
 
@@ -12,10 +12,10 @@ const startServer = async () => {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: authMiddlewareGraphQL,
+    context: authMiddleware,
   });
 
-  await server.start(); // Ensure the server is started before applying middleware
+  await server.start();
   server.applyMiddleware({ app });
 
   app.use(express.urlencoded({ extended: true }));
@@ -37,5 +37,4 @@ const startServer = async () => {
   });
 };
 
-// Start the Apollo server
 startServer();
